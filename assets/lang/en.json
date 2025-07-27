@@ -1,0 +1,11 @@
+
+{
+  "menu": "Menu",
+  "profile": "Profile",
+  "manage_user": "Manage User",
+  "add_task": "Add Task",
+  "show_task": "Show Task",
+  "notifications": "Notifications",
+  "settings": "Settings",
+  "logout": "Logout"
+}

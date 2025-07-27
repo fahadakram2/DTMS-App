@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "761127960904",
+    "project_id": "fyp-project-f2966",
+    "storage_bucket": "fyp-project-f2966.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761127960904:android:0923cb2cfb1d9d026a737d",
+        "android_client_info": {
+          "package_name": "com.example.dtms"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC71IFaYQSYM1hTuVkmH6qT_xkou9-1avg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761127960904:android:ae31066e083a5b3f6a737d",
+        "android_client_info": {
+          "package_name": "com.example.dtms_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC71IFaYQSYM1hTuVkmH6qT_xkou9-1avg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761127960904:android:69efbacf5a0d18056a737d",
+        "android_client_info": {
+          "package_name": "com.example.fyp_project1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC71IFaYQSYM1hTuVkmH6qT_xkou9-1avg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
