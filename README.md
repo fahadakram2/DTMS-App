@@ -1,16 +1,27 @@
-# fyp_project1
+# 📱 Digital Task Management System (DTMS)
 
-A new Flutter project.
+A mobile-first Flutter application powered by Firebase, designed to streamline task assignment, performance tracking, and role-based dashboards for Admins and Employees.
 
-## Getting Started
+## 🚀 Features
 
-This project is a starting point for a Flutter application.
+- 🔐 Firebase Authentication (Login & Signup)
+- 🎭 Role-based Access (Admin & Employee)
+- 📋 Task Creation & Assignment (by Admin)
+- ✅ Task Completion Tracking (by Employees)
+- 🏆 Leaderboard based on task performance
+- ⚙️ Settings (Theme, Notifications, Language)
+- 🌐 Firestore Integration for real-time data
 
-A few resources to get you started if this is your first Flutter project:
+## 📂 Project Structure
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+fyp_project1/
+├── lib/
+│   ├── screens/          # Login, Signup, Dashboard, etc.
+│   ├── services/         # Firebase auth and database logic
+│   ├── widgets/          # Reusable UI components
+│   └── main.dart         # App entry point
+├── android/              # Android platform code
+├── ios/                  # iOS platform code
+├── pubspec.yaml          # Project dependencies
+└── README.md             # Project info
