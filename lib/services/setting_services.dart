@@ -7,7 +7,7 @@ class SettingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// 🔵 Save user's theme preference
+  /// Save user's theme preference
   Future<void> saveThemePreference(bool isDarkMode) async {
     final uid = _auth.currentUser?.uid;
     if (uid == null) return;
@@ -19,7 +19,7 @@ class SettingService {
     }, SetOptions(merge: true));
   }
 
-  /// 🔵 Load user's theme preference (default = false)
+  ///  Load user's theme preference (default = false)
   Future<bool> loadThemePreference() async {
     final uid = _auth.currentUser?.uid;
     if (uid == null) return false;
@@ -28,7 +28,7 @@ class SettingService {
     return doc.data()?['preferences']?['isDarkMode'] ?? false;
   }
 
-  /// 🌐 Save user's language preference
+  ///  Save user's language preference
   Future<void> saveLanguagePreference(String languageCode) async {
     final uid = _auth.currentUser?.uid;
     if (uid == null) return;
@@ -40,7 +40,7 @@ class SettingService {
     }, SetOptions(merge: true));
   }
 
-  /// 🌐 Load user's language preference (default = 'en')
+  ///  Load user's language preference (default = 'en')
   Future<String> loadLanguagePreference() async {
     final uid = _auth.currentUser?.uid;
     if (uid == null) return 'en';

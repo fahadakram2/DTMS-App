@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 🔵 Admin Task Creation Service
+///  Admin Task Creation Service
 class AdminTaskService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -59,7 +59,7 @@ class FirebaseTaskService {
   }
 }
 
-/// 🔵 Admin User Management Service
+///  Admin User Management Service
 class AdminManageUserService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 

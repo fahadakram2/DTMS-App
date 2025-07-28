@@ -55,8 +55,8 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedRole == 'Select Role') {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Please select a role")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please select a role")));
       return;
     }
 
@@ -65,61 +65,64 @@ class _SignupScreenState extends State<SignupScreen> {
     final role = _selectedRole.toLowerCase();
     final roleId = _roleIdController.text.trim();
 
-    if (role == 'admin') {
-      final isValidAdmin = await _isAdminIdValid(roleId);
-      if (!isValidAdmin) {
-        setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Invalid or already used Admin ID")));
-        return;
-      }
-    } else if (role == 'employee') {
-      final employeeDoc = await FirebaseFirestore.instance
-          .collection('employee_ids')
-          .doc(roleId)
-          .get();
-
-      if (!employeeDoc.exists) {
-        setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Invalid Employee ID")));
-        return;
-      }
-
-      final employeeData = employeeDoc.data()!;
-      if (employeeData['isUsed'] == true) {
-        setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("This Employee ID has already been used")));
-        return;
-      }
-
-      if (employeeData['name'].toString().toLowerCase() !=
-          _nameController.text.trim().toLowerCase()) {
-        setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Name does not match the assigned employee name")));
-        return;
-      }
-    }
-
     try {
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
+      if (role == 'admin') {
+        final isValidAdmin = await _isAdminIdValid(roleId);
+        if (!isValidAdmin) {
+          setState(() => _loading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Invalid or already used Admin ID")));
+          return;
+        }
+      } else if (role == 'employee') {
+        final employeeDoc = await FirebaseFirestore.instance
+            .collection('employee_ids')
+            .doc(roleId)
+            .get();
+
+        if (!employeeDoc.exists) {
+          setState(() => _loading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Invalid Employee ID")));
+          return;
+        }
+
+        final employeeData = employeeDoc.data()!;
+        if (employeeData['isUsed'] == true) {
+          setState(() => _loading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("This Employee ID has already been used")));
+          return;
+        }
+
+        if (employeeData['name'].toString().toLowerCase() !=
+            _nameController.text.trim().toLowerCase()) {
+          setState(() => _loading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Name does not match the assigned employee name")));
+          return;
+        }
+      }
+
+      // Create user
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
       final uid = credential.user!.uid;
 
-      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      // Save user data using uid as document ID — no 'uid' field inside document
+      final usersRef = FirebaseFirestore.instance.collection('users');
+      await usersRef.doc(uid).set({
         'name': _nameController.text.trim(),
         'email': _emailController.text.trim(),
         'role': role,
         'role_id': roleId,
+        'signedUp': true,
       });
 
-      // ✅ Mark the ID as used
+      // Mark role ID as used
       final idCollection = role == 'admin' ? 'admin_ids' : 'employee_ids';
       await FirebaseFirestore.instance
           .collection(idCollection)
@@ -134,8 +137,7 @@ class _SignupScreenState extends State<SignupScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.check_circle_outline,
-                  size: 60, color: Color(0xFF388E3C)),
+              Icon(Icons.check_circle_outline, size: 60, color: Color(0xFF388E3C)),
               SizedBox(height: 10),
               Text("Signup Successful!", style: TextStyle(fontSize: 18)),
             ],
@@ -146,12 +148,19 @@ class _SignupScreenState extends State<SignupScreen> {
       await Future.delayed(Duration(seconds: 2));
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => LoginScreen()));
+
     } on FirebaseAuthException catch (e) {
       setState(() => _loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message ?? "Signup failed")));
+    } catch (e) {
+      setState(() => _loading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Signup failed: $e")));
     }
   }
+
+
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,

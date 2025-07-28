@@ -66,12 +66,12 @@ class _LoginScreenState extends State<LoginScreen>
 
         final user = userCredential.user;
         if (user != null) {
-          final userDoc = await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+          final userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
 
+          final userDoc = await userDocRef.get();
           final userData = userDoc.data();
+
           if (userData == null || !userData.containsKey('role')) {
             setState(() => _loading = false);
             ScaffoldMessenger.of(context).showSnackBar(
@@ -80,8 +80,17 @@ class _LoginScreenState extends State<LoginScreen>
             return;
           }
 
-          final String userName = userData['name'] ?? 'User';
           final String role = userData['role'];
+          final String userName = userData['name'] ?? 'User';
+          final String roleId = userData['role_id'] ?? '';
+
+          if (roleId.isEmpty) {
+            setState(() => _loading = false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Employee ID not found. Contact support.")),
+            );
+            return;
+          }
 
           setState(() => _loading = false);
 
@@ -128,6 +137,7 @@ class _LoginScreenState extends State<LoginScreen>
                   builder: (_) => PostLoginSplashScreen(
                     role: role,
                     name: userName,
+                    // Pass roleId if needed
                   ),
                 ),
               );
@@ -144,8 +154,7 @@ class _LoginScreenState extends State<LoginScreen>
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.cancel_outlined,
-                      size: 60, color: Color(0xFFD32F2F)),
+                  Icon(Icons.cancel_outlined, size: 60, color: Color(0xFFD32F2F)),
                   SizedBox(height: 15),
                   RichText(
                     textAlign: TextAlign.center,
@@ -179,6 +188,7 @@ class _LoginScreenState extends State<LoginScreen>
       }
     }
   }
+
 
   Widget _buildCustomLogo() {
     return Container(

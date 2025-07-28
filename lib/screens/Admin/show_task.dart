@@ -82,6 +82,58 @@ class _ShowTaskScreenState extends State<ShowTaskScreen> {
     );
   }
 
+  void _showUpdateDialog(String taskId, String currentTitle, String currentStatus) {
+    final titleController = TextEditingController(text: currentTitle);
+    String selectedStatus = currentStatus;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Update Task'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Task Title'),
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              value: selectedStatus,
+              items: ['pending', 'in progress', 'completed']
+                  .map((status) => DropdownMenuItem(
+                value: status,
+                child: Text(status),
+              ))
+                  .toList(),
+              onChanged: (value) => selectedStatus = value!,
+              decoration: const InputDecoration(labelText: 'Task Status'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await FirebaseFirestore.instance.collection('tasks').doc(taskId).update({
+                'title': titleController.text.trim(),
+                'status': selectedStatus,
+              });
+              Navigator.of(ctx).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Task updated successfully')),
+              );
+            },
+            child: const Text('Update'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTaskCard(DocumentSnapshot taskDoc) {
     final data = taskDoc.data()! as Map<String, dynamic>;
     final title = data['title'] ?? 'No Title';
@@ -191,6 +243,10 @@ class _ShowTaskScreenState extends State<ShowTaskScreen> {
                                 ),
                             ],
                           ),
+                        IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.amber),
+                          onPressed: () => _showUpdateDialog(taskId, title, status),
+                        ),
                         IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
                           onPressed: () => _confirmDelete(taskId),
